@@ -1,4 +1,78 @@
 # RaspberryPiCarSecuritySystem
+## **Object tracking**
+We use data representing the bounding boxes positions provided by the object recognition model YOLOv4 to track a moving item and then transfer it to a servo to keep track of it. The accuracy of object tracking in our case strongly depends on the quality of the object recognition model and the algorithm efficiency. 
+
+An object is in the middle of the camera when x=250 and y=175
+
+**Representation of the two-dimensional coordinate plane on OpenCV**
+
+**Servo and Object position representation**
+
+**Field of view and Limit representation(The camera tracks objects moving outside the limit)**
+
+
+
+
+
+
+
+
+
+**Midpoint of multiple object**
+
+The single and the multiple(midpoint) object tracking require to get the X and Y coordinate from object recognition.
+### **Distance calculation**
+The distance is calculated using a single camera. 
+
+**Triangle similarity representation**
+
+Known width W. We then place this object to a known distance D away from the camera we then use image processing techniques from OpenCV to calculate the apparent width of the object in pixel (object recognition) P hence, we can find the focal length: 
+
+`                                                               `F=(P•D)/W                                                                   
+
+D’ can be found using F’=(P•D)/W|P•D=F•W|D=(W•F)/P hence:
+
+`   `D’=(W•F)/P					                
+
+This means that from the focal length we found at the beginning, we can continuously find the distance of the object D’:
+
+Object recognition–>Object width in pixel P->F= (P•D known)/W known -> D’=(W known • F)/P->….
+
+
+**Speed Calculation**
+
+To perform the speed calculation of an object we need to know its distance on each frame and store the change in a list with:
+
+changeDistance = distance - self.intialDisntace
+
+then convert it in meter because the distance is in inch:
+
+distanceInMeters = changeDistance \* 0.0254
+
+**Main project Design**
+
+
+\- Live feed image of video streaming image 
+
+\- Sending instructions to the robot (Control)
+
+Components:
+
+-Raspberry Pi
+
+\- Floor Chassis L298N motor diver chip
+
+\- Ultrasonic sensor HC-SR04(Obstacles)
+
+\- Upper and Lower servo motors
+
+-Camera
+
+-4 DC motors
+
+-4 Wheels
+
+
 The control system window is the principal windows; it contains the principal features implemented in the system:
 
 `			                      `**Main window of user interface**
@@ -93,14 +167,11 @@ Detection button holds the motion and the object recognition feature. We are abl
 ### Automode
 The auto mode has been introduced in chapter 3 as object tracking. It enables the automatic object tracking and disables the user servo control feature. 
 
-**Fig.5-16 Automode** 
-### 5.3.4 Robot control
+` `**Automode** 
+### ` `Robot control
 From the moment the program launches, the robot can be controlled using the keyword up, down, right, left button or the direction buttons on the screen (can be used on touchscreen).
 
 **Fig.5-17 Robot Control panel** 
 
 ### Monitoring
 The monitoring mode can be explained as a stealth mode where the robot speed is decreased to the minimum (to prevent noise), the servo speed is decreased to the minimum and the object recognition is on. It is used in situations when the robot should not be detected by its surrounding.
-**
-
-
